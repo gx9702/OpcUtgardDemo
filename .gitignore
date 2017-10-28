@@ -1,16 +1,2 @@
-*.class
 
-# Package Files #
-*.jar
-*.war
-*.ear
-
-# Eclipse
-.settings/
-.project
-.classpath
-.checkstyle
-
-# Maven #
-target/
-dependency-reduced-pom.xml
+/bin/

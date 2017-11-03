@@ -16,8 +16,7 @@ import org.zihao.opc.utils.PropertyFileManager;
 
 /**
  * it's a simple example for testing the communication between java and opc
- * using utgard. you need to create a DCOM user in your computer first and
- * config it exactly.
+ * using utgard.
  */
 public class App {
 
@@ -26,20 +25,18 @@ public class App {
 
 		/** get clsid */
 		PropertyFileManager.loadPropertyFile("opcclsid.properties");
-		String clsid = PropertyFileManager.getValue(OpcType.CIMPLICITY);
+		String clsid = PropertyFileManager.getValue(OpcType.KEPWARE);
 
 		if (null == clsid) {
 			return;
 		}
-
-		System.out.println("clsid=" + clsid);
 
 		final ConnectionInformation ci = new ConnectionInformation();
 		ci.setHost("localhost");
 		ci.setDomain("localhost");
 		ci.setClsid(clsid);
 
-		/** DCOM user */
+		/** enter your user info */
 		ci.setUser("OpcUser");
 		ci.setPassword("Pass1234");
 
@@ -51,12 +48,13 @@ public class App {
 			group.setActive(true);
 
 			/** KEPWARE ITEM */
-			// final Item item = group.addItem("Test.Device.Test");
-			// String[] test = new String[] { "Test.Device.Test1", "Test.Device.Test2" };
+			final Item item = group.addItem("Test.Device.Test");
+			String[] test = new String[] { "Test.Device.Test1", "Test.Device.Test2" };
 
 			/** CIM ITEM */
-			final Item item = group.addItem("\\\\OPCCONNDEMO\\TEST");
-			String[] test = new String[] { "\\\\OPCCONNDEMO\\TEST1", "\\\\OPCCONNDEMO\\TEST2" };
+			// final Item item = group.addItem("\\\\OPCCONNDEMO\\TEST");
+			// String[] test = new String[] { "\\\\OPCCONNDEMO\\TEST1",
+			// "\\\\OPCCONNDEMO\\TEST2" };
 
 			map = group.addItems(test);
 

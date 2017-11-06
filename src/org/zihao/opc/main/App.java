@@ -11,35 +11,34 @@ import org.openscada.opc.lib.common.ConnectionInformation;
 import org.openscada.opc.lib.da.Group;
 import org.openscada.opc.lib.da.Item;
 import org.openscada.opc.lib.da.Server;
+import org.openscada.opc.lib.list.ServerList;
 import org.zihao.opc.utils.OpcType;
-import org.zihao.opc.utils.PropertyFileManager;
 
 /**
  * it's a simple example for testing the communication between java and opc
  * using utgard.
  */
 public class App {
+	private static String host = "127.0.0.1";
+	private static String domain = "";
+	private static String progId = OpcType.KEPWARE;
+	private static String user = "OpcUser";
+	private static String password = "***";
 
 	public static void main(String[] args) throws Exception {
 		Map<String, Item> map = new HashMap<String, Item>();
 
 		/** get clsid */
-		PropertyFileManager.loadPropertyFile("opcclsid.properties");
-		String clsid = PropertyFileManager.getValue(OpcType.KEPWARE);
-
-		if (null == clsid) {
-			return;
-		}
-
+		ServerList serverList = new ServerList(host, user, password, domain);
+		String clsIdFromProgId = serverList.getClsIdFromProgId(progId);
+		
 		final ConnectionInformation ci = new ConnectionInformation();
-		ci.setHost("localhost");
-		ci.setDomain("localhost");
-		ci.setClsid(clsid);
-
-		/** enter your user info */
-		ci.setUser("OpcUser");
-		ci.setPassword("Pass1234");
-
+		ci.setHost(host);
+		ci.setDomain(domain);
+		ci.setClsid(clsIdFromProgId);
+		ci.setUser(user);
+		ci.setPassword(password);
+		
 		final Server server = new Server(ci, Executors.newSingleThreadScheduledExecutor());
 		try {
 			server.connect();
@@ -64,17 +63,18 @@ public class App {
 			/** write item */
 			item.setActive(true);
 			item.write(new JIVariant("999"));
+			
+			/** read item each 2s */
+			while (true) {
+				Thread.sleep(2000);
 
+				read(map);
+			}
+			
 		} catch (final JIException e) {
 			e.printStackTrace();
 		}
-
-		/** read item each 2s */
-		while (true) {
-			Thread.sleep(2000);
-
-			read(map);
-		}
+		
 	}
 
 	private static void read(Map<String, Item> map) throws JIException {

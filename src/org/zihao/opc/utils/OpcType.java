@@ -1,7 +1,7 @@
 package org.zihao.opc.utils;
 
 public class OpcType {
-	public static String KEPWARE = "KEPWARE";
-	public static String CIMPLICITY = "CIMPLICITY";
+	public static String KEPWARE = "Kepware.KEPServerEX.V5";
+	public static String CIMPLICITY = "CIMPLICITY.HMI.OPCServer.1";
 
 }

@@ -21,9 +21,9 @@ import org.zihao.opc.utils.OpcType;
 public class App {
 	private static String host = "127.0.0.1";
 	private static String domain = "";
-	private static String progId = OpcType.KEPWARE;
+	private static String progId = OpcType.CIMPLICITY;
 	private static String user = "OpcUser";
-	private static String password = "***";
+	private static String password = "Pass1234";
 
 	public static void main(String[] args) throws Exception {
 		Map<String, Item> map = new HashMap<String, Item>();
@@ -31,14 +31,14 @@ public class App {
 		/** get clsid */
 		ServerList serverList = new ServerList(host, user, password, domain);
 		String clsIdFromProgId = serverList.getClsIdFromProgId(progId);
-		
+
 		final ConnectionInformation ci = new ConnectionInformation();
 		ci.setHost(host);
 		ci.setDomain(domain);
 		ci.setClsid(clsIdFromProgId);
 		ci.setUser(user);
 		ci.setPassword(password);
-		
+
 		final Server server = new Server(ci, Executors.newSingleThreadScheduledExecutor());
 		try {
 			server.connect();
@@ -47,13 +47,12 @@ public class App {
 			group.setActive(true);
 
 			/** KEPWARE ITEM */
-			final Item item = group.addItem("Test.Device.Test");
-			String[] test = new String[] { "Test.Device.Test1", "Test.Device.Test2" };
+			// final Item item = group.addItem("Test.Device.Test");
+			// String[] test = new String[] { "Test.Device.Test1", "Test.Device.Test2" };
 
 			/** CIM ITEM */
-			// final Item item = group.addItem("\\\\OPCCONNDEMO\\TEST");
-			// String[] test = new String[] { "\\\\OPCCONNDEMO\\TEST1",
-			// "\\\\OPCCONNDEMO\\TEST2" };
+			final Item item = group.addItem("\\\\OPCCONNDEMO\\TEST");
+			String[] test = new String[] { "\\\\OPCCONNDEMO\\TEST1", "\\\\OPCCONNDEMO\\TEST2" };
 
 			map = group.addItems(test);
 
@@ -63,18 +62,18 @@ public class App {
 			/** write item */
 			item.setActive(true);
 			item.write(new JIVariant("999"));
-			
+
 			/** read item each 2s */
 			while (true) {
 				Thread.sleep(2000);
 
 				read(map);
 			}
-			
+
 		} catch (final JIException e) {
 			e.printStackTrace();
 		}
-		
+
 	}
 
 	private static void read(Map<String, Item> map) throws JIException {
